@@ -13,7 +13,10 @@ repositories {
 kotlin {
 
     android {
-        publishLibraryVariants("release")
+        publishLibraryVariants("debug", "release")
+        mavenPublication {
+            this.artifactId = "pbandk-$artifactId"
+        }
     }
 
     jvm()
@@ -24,6 +27,7 @@ kotlin {
         nodejs {}
     }
 
+    iosArm32()
     iosArm64()
     iosX64()
 
@@ -167,16 +171,13 @@ tasks {
     }
 }
 
-afterEvaluate {
-    // This needs to be inside of `afterEvaluate` to work correctly with the Android Gradle plugin
-    publishing {
-        publications.withType<MavenPublication>().configureEach {
-            artifactId = "pbandk-$artifactId"
-            description = "Library for pbandk runtime protobuf code"
-            pom {
-                configureForPbandk()
-            }
-            addBintrayRepository(project, this)
+publishing {
+    publications.withType<MavenPublication>().configureEach {
+        artifactId = "pbandk-$artifactId"
+        description = "Library for pbandk runtime protobuf code"
+        pom {
+            configureForPbandk()
         }
+        addBintrayRepository(project, this)
     }
 }
